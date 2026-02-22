@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
-  const { api, backendUrl, setUserData } = useContext(UserContext);
+  const { api, setUserData } = useContext(UserContext);
 
   const otpRef = React.useRef([]);
   const handleInput = (e, ind) => {
@@ -34,7 +34,7 @@ const VerifyEmail = () => {
     try {
       const inputOTP = otpRef.current.map((e) => e.value);
       const otp = inputOTP.join("");
-      const response = await api.post(backendUrl + "/api/verifyEmail", {
+      const response = await api.post("/api/verifyEmail", {
         otp,
       });
 
