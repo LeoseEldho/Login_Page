@@ -5,13 +5,13 @@ import { UserContext } from "../Context/AppContext";
 import { toast } from "react-toastify";
 
 const Header = () => {
-  const {  setLogin, backendUrl, api, userData, setUserData } =
+  const {  setLogin, api, userData, setUserData } =
     useContext(UserContext);
   const navigate = useNavigate();
 
   const logOutHandler = async () => {
     try {
-      let response = await api.post(backendUrl + "/api/logout");
+      let response = await api.post("/api/logout");
       if (response.data?.success) {
         setLogin(false);
         setUserData(false);
@@ -31,7 +31,7 @@ const Header = () => {
 
   const verifyEmailHandler = async () => {
     try {
-      let response = await api.post(backendUrl + "/api/sentOTP");
+      let response = await api.post("/api/sentOTP");
       if (response.data.success) {
         toast.success("OTP sented successfully !");
         navigate("/verifyEmail");
