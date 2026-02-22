@@ -4,7 +4,7 @@ import { UserContext } from "../Context/AppContext";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const { api, setLogin, setUserData ,backendUrl} = useContext(UserContext);
+  const { api, setLogin, setUserData } = useContext(UserContext);
   const [state, setState] = useState("signup");
   const [name, setname] = useState("");
   const [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ const Login = () => {
     try {
       let response;
       if (state == "signup") {
-        response = await api.post(backendUrl+"/api/register", {
+        response = await api.post("/api/register", {
           name,
           email,
           password,
@@ -28,7 +28,7 @@ const Login = () => {
           navigate("/login");
         }
       } else {
-        response = await api.post(backendUrl+"/api/login", {
+        response = await api.post("/api/login", {
           email,
           password,
         });
