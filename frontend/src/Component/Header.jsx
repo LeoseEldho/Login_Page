@@ -30,6 +30,11 @@ const Header = () => {
   };
 
   const verifyEmailHandler = async () => {
+      if (!userData) {
+    toast.error("Please login again");
+    navigate("/login");
+    return;
+  }
     try {
       let response = await api.post("/api/sentOTP");
       if (response.data.success) {
