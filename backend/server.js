@@ -14,8 +14,8 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [
-      https://login-page-frontend-three.vercel.app/
+      origin: [
+       "https://login-page-frontend-three.vercel.app"
     ],
     credentials: true,
   })
