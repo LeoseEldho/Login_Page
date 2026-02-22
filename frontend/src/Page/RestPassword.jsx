@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 const RestPassword = () => {
   const navigate = useNavigate();
-  const { api, backendUrl } = useContext(UserContext);
+  const { api } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [Password,setPassword]=useState("")
@@ -39,7 +39,7 @@ const RestPassword = () => {
   const hanndleEmail = async (e) => {
     e.preventDefault()
     try {
-      let respones =await api.post(backendUrl+"/api/changepassword", {
+      let respones =await api.post("/api/changepassword", {
         email
       });
       if (respones.data.success) {
@@ -63,7 +63,7 @@ const RestPassword = () => {
   const PasswordHandler = async (e) => {
     e.preventDefault();
     try {
-      const respones = await api.post(backendUrl + "/api/setPassword", {
+      const respones = await api.post("/api/setPassword", {
         email,
         otp,
         Password,
