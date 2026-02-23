@@ -11,7 +11,7 @@ DataBaseConnection()
 
 // ✅ CORS - This is the critical fix
 const allowedOrigins = [
-  "https://login-page-liard-ten.vercel.app/",
+  "https://login-page-liard-ten.vercel.app",
   "http://localhost:5173",
 ];
 
