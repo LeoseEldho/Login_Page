@@ -59,9 +59,9 @@ const Header = () => {
           {userData?.name?.[0]}
           <div className="absolute hidden group-hover:block top-0 right-0 pt-12 z-12">
             <ul className=" bg-[#aab2aa] font-bold text-black text-sm p-4 text-left">
-              {!userData.isVerifyedUSer&&(<Link to={"/verifyEmail"} onClick={verifyEmailHandler}>
+              {!userData.isVerifyedUSer&&(<div onClick={verifyEmailHandler}>
                 emailVerify
-              </Link>)}
+              </div>)}
               <li onClick={logOutHandler}>logout</li>
             </ul>
           </div>
