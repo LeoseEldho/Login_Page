@@ -84,8 +84,8 @@ export const userLogin = async (req, res) => {
     // Sending token in cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: true, // MUST be true on Vercel
+      sameSite: "none", // MUST be none for cross-site
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -108,8 +108,8 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV == "production",
-      sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
+      secure: true,
+      sameSite: "none",
     });
     return res.status(200).json({
       success: true,
@@ -177,7 +177,7 @@ export const verifyEmail = async (req, res) => {
     }
 
     user.isVerifyedUSer = true;
-    user.otp = null
+    user.otp = null;
     user.expireyOtp = 0;
     await user.save();
 
@@ -217,8 +217,11 @@ export const changePassword = async (req, res) => {
         from: process.env.SENDER_EMAIL,
         to: user.email,
         subject: "Password Reset OTP",
-        html:PASSWORD_RESET_TEMPLATE.replace("{{otp}}",user.otp).replace("{{email}}",user.email)
-      })
+        html: PASSWORD_RESET_TEMPLATE.replace("{{otp}}", user.otp).replace(
+          "{{email}}",
+          user.email,
+        ),
+      });
     } catch (error) {
       console.log(error);
       return res
@@ -235,41 +238,46 @@ export const changePassword = async (req, res) => {
 };
 
 export const setPassword = async (req, res) => {
- try {
-   const { email, otp, Password } = req.body;
-   console.log(email,otp,Password)
-  if (!email || !otp || !Password) {
-    return res.status(401).json({ success: false, message: "enter details" });
-  }
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(401).json({ success: false, message: "User Not Found!" });
-   }
-   console.log(user.otp,otp)
-  if (user.otp !== String(otp)) {
+  try {
+    const { email, otp, Password } = req.body;
+    console.log(email, otp, Password);
+    if (!email || !otp || !Password) {
+      return res.status(401).json({ success: false, message: "enter details" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User Not Found!" });
+    }
+    console.log(user.otp, otp);
+    if (user.otp !== String(otp)) {
+      return res
+        .status(401)
+        .json({ success: false, message: "OTP not Matching " });
+    }
+    if (user.resetOtpExpireAt < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired",
+      });
+    }
+    const salt = await bcrypts.genSalt(10);
+    const hash = await bcrypts.hash(Password, salt);
+
+    user.password = hash;
+    user.otp = null;
+    user.resetOtpExpireAt = null;
+    await user.save();
+
+    console.log("fooling");
+    res
+      .status(200)
+      .json({ success: true, message: "Password Changed Successfully" });
+  } catch (error) {
+    console.log(error);
     return res
       .status(401)
-      .json({ success: false, message: "OTP not Matching " });
+      .json({ success: false, message: "Something Occure" });
   }
-  if (user.resetOtpExpireAt < Date.now()) {
-    return res.status(400).json({
-      success: false,
-      message: "OTP expired",
-    });
-  }
-  const salt = await bcrypts.genSalt(10);
-  const hash = await bcrypts.hash(Password, salt);
-  
-  user.password = hash;
-  user.otp = null;
-  user.resetOtpExpireAt = null;
-   await user.save();
-
-   console.log("fooling")
-  res.status(200).json({success:true,message:"Password Changed Successfully"})
- } catch (error) {
-   console.log(error)
-  return  res.status(401).json({success:false,message:"Something Occure"})
- }
 };
-
