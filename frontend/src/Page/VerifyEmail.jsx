@@ -53,25 +53,34 @@ const VerifyEmail = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center  bg-white dark:bg-gray-800 ">
-      <div className="border-white border-2 rounded-2xl p-3.5 bg-[#4f7c70] flex flex-col items-center min-w-4/6 sm:min-w-min sm:w-96">
-        <div className=" text-2xl font-bold  text-white  "> Verify Email </div>
+   <div className="min-h-screen flex justify-center items-center px-4 bg-white dark:bg-gray-800">
+      <div
+        className="border-white border-2 rounded-2xl p-4 bg-[#4f7c70]
+                    flex flex-col items-center
+                    w-full max-w-sm sm:max-w-md"
+      >
+        <div className="text-2xl font-bold text-white">Verify Email</div>
 
-        <h3 className=" text-blue-500 text-center mt-2 mb-4 ">
+        <h3 className="text-blue-500 text-center mt-2 mb-4">
           Enter the verification code sent to your email address.
         </h3>
-        <div className="flex mb-3 gap-2 justify-center" onPaste={handlePaste}>
+
+        <div
+          className="flex mb-3 gap-2 justify-center w-full"
+          onPaste={handlePaste}
+        >
           {Array(6)
             .fill(0)
             .map((_, ind) => (
               <input
-                maxLength="1"
                 key={ind}
-                required=""
+                maxLength="1"
                 ref={(e) => (otpRef.current[ind] = e)}
                 onInput={(e) => handleInput(e, ind)}
                 onKeyDown={(e) => handleKeyDown(e, ind)}
-                className="w-12 h-12 bg-[#333A5C] text-white  text-center text-xl rounded-md"
+                className="w-10 h-10 sm:w-12 sm:h-12
+                       bg-[#333A5C] text-white text-center
+                       text-lg sm:text-xl rounded-md"
                 type="text"
               />
             ))}
@@ -79,7 +88,8 @@ const VerifyEmail = () => {
 
         <button
           onClick={verifyHandler}
-          className="font-bold cursor-pointer mt-1.5 text-shadow-amber-200 px-4 w-full bg-green-300 text-white  py-2 border border-white rounded-full"
+          className="font-bold mt-2 w-full bg-green-300
+                   text-white py-2 border border-white rounded-full"
         >
           Submit
         </button>
